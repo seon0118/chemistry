@@ -16,52 +16,56 @@
     
     h1 {
       color: #333;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
-    
-    .container {
-      display: flex;
-      justify-content: center;
-      gap: 50px;
-      margin-bottom: 30px;
-    }
-    
-    .beaker {
-      position: relative;
-      width: 200px;
-      height: 250px;
-      background-color: rgba(255, 255, 255, 0.8);
-      border: 2px solid #333;
-      border-radius: 0 0 20px 20px;
-      overflow: hidden;
+
+    .experiment-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-end;
+      gap: 40px;
+      margin-bottom: 30px;
     }
     
-    .liquid {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 200px;
-      background-color: rgba(240, 240, 240, 0.7);
-      transition: background-color 0.8s ease;
+    .litmus-papers-container {
+      display: flex;
+      justify-content: center;
+      gap: 100px;
+      margin-bottom: 20px;
     }
     
-    .beaker-label {
-      position: absolute;
-      bottom: -30px;
+    .litmus-paper {
+      width: 80px;
+      height: 25px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: 1px solid #333;
+    }
+    
+    .litmus-paper:hover {
+      transform: scale(1.05);
+    }
+    
+    .blue-litmus {
+      background-color: #6495ED;
+    }
+    
+    .red-litmus {
+      background-color: #FF6347;
+    }
+    
+    .litmus-label {
+      font-size: 0.8rem;
       text-align: center;
-      width: 100%;
+      margin-top: 5px;
       font-weight: bold;
     }
     
-    .test-tubes {
+    .test-tubes-container {
       display: flex;
-      flex-direction: column;
-      gap: 30px;
+      justify-content: center;
+      gap: 100px;
+      margin-top: 20px;
     }
     
     .test-tube {
@@ -106,38 +110,83 @@
       font-size: 0.9rem;
     }
     
-    .litmus-papers {
+    .beaker-container {
+      position: relative;
+    }
+    
+    .beaker {
+      position: relative;
+      width: 200px;
+      height: 250px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border: 2px solid #333;
+      border-radius: 0 0 20px 20px;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      margin-left: 30px;
+      align-items: center;
+      justify-content: flex-end;
     }
     
-    .litmus-paper {
-      width: 80px;
-      height: 25px;
-      cursor: pointer;
-      transition: transform 0.2s;
-      border: 1px solid #333;
+    .liquid {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 200px;
+      background-color: rgba(240, 240, 240, 0.7);
+      transition: background-color 0.8s ease;
     }
     
-    .litmus-paper:hover {
-      transform: scale(1.05);
-    }
-    
-    .blue-litmus {
-      background-color: #6495ED;
-    }
-    
-    .red-litmus {
-      background-color: #FF6347;
-    }
-    
-    .litmus-label {
-      font-size: 0.8rem;
+    .beaker-label {
+      position: absolute;
+      bottom: -30px;
       text-align: center;
-      margin-top: 5px;
+      width: 100%;
       font-weight: bold;
+    }
+    
+    .indicators {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+      background-color: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
+    
+    .indicator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .indicator-label {
+      font-weight: bold;
+    }
+    
+    .ph-meter {
+      background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+      height: 25px;
+      width: 100%;
+      position: relative;
+      margin-top: 5px;
+      border-radius: 3px;
+    }
+    
+    .ph-pointer {
+      position: absolute;
+      top: -10px;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 10px solid black;
+      transform: translateX(-8px);
+      transition: left 0.5s ease;
     }
     
     .instructions {
@@ -178,30 +227,15 @@
       margin-top: 20px;
       font-weight: bold;
       height: 24px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <h1>酚酞與石蕊試紙實驗</h1>
   
-  <div class="container">
-    <div class="test-tubes">
-      <div class="test-tube acid" id="acid">
-        <div class="tube-liquid"></div>
-        <div class="test-tube-label">醋酸<br>(酸性)</div>
-      </div>
-      <div class="test-tube base" id="base">
-        <div class="tube-liquid"></div>
-        <div class="test-tube-label">氫氧化鈉<br>(鹼性)</div>
-      </div>
-    </div>
-    
-    <div class="beaker" id="beaker">
-      <div class="liquid" id="beaker-liquid"></div>
-      <div class="beaker-label">燒杯中的酚酞溶液</div>
-    </div>
-    
-    <div class="litmus-papers">
+  <div class="experiment-container">
+    <div class="litmus-papers-container">
       <div>
         <div class="litmus-paper blue-litmus" id="blue-litmus"></div>
         <div class="litmus-label">藍色石蕊試紙</div>
@@ -209,6 +243,42 @@
       <div>
         <div class="litmus-paper red-litmus" id="red-litmus"></div>
         <div class="litmus-label">紅色石蕊試紙</div>
+      </div>
+    </div>
+    
+    <div class="test-tubes-container">
+      <div class="test-tube acid" id="acid">
+        <div class="tube-liquid"></div>
+        <div class="test-tube-label">硫酸<br>(強酸性)</div>
+      </div>
+      <div class="test-tube base" id="base">
+        <div class="tube-liquid"></div>
+        <div class="test-tube-label">氫氧化鈉<br>(強鹼性)</div>
+      </div>
+    </div>
+    
+    <div class="beaker-container">
+      <div class="beaker" id="beaker">
+        <div class="liquid" id="beaker-liquid"></div>
+        <div class="beaker-label">燒杯中的酚酞溶液</div>
+      </div>
+    </div>
+    
+    <div class="indicators">
+      <div class="indicator">
+        <span class="indicator-label">pH值：</span>
+        <span id="ph-value">7.0</span>
+      </div>
+      <div class="ph-meter">
+        <div class="ph-pointer" id="ph-pointer" style="left: 50%;"></div>
+      </div>
+      <div class="indicator">
+        <span class="indicator-label">氫離子濃度 [H+]：</span>
+        <span id="h-conc">1.00 × 10<sup>-7</sup> mol/L</span>
+      </div>
+      <div class="indicator">
+        <span class="indicator-label">氫氧根離子濃度 [OH-]：</span>
+        <span id="oh-conc">1.00 × 10<sup>-7</sup> mol/L</span>
       </div>
     </div>
   </div>
@@ -225,14 +295,10 @@
       <li><strong>藍色石蕊試紙：</strong>在酸性環境下變紅色，在鹼性和中性環境下保持藍色</li>
       <li><strong>紅色石蕊試紙：</strong>在鹼性環境下變藍色，在酸性和中性環境下保持紅色</li>
     </ul>
-    <p>在本實驗中：</p>
-    <ul>
-      <li>最初的燒杯中含有無色的酚酞溶液（中性環境）</li>
-      <li>點擊含有醋酸的試管，溶液會保持無色（酸性環境）</li>
-      <li>點擊含有氫氧化鈉的試管，溶液會變為粉紅色（鹼性環境）</li>
-      <li>如果溶液已經是粉紅色（鹼性），再加入醋酸會使其變回無色（中和反應）</li>
-      <li>點擊石蕊試紙可以測試燒杯中溶液的酸鹼性</li>
-    </ul>
+    <p><strong>氫離子與氫氧根離子濃度關係：</strong></p>
+    <p>在水溶液中，氫離子[H+]和氫氧根離子[OH-]的濃度乘積等於水的離子積常數K<sub>w</sub> = 10<sup>-14</sup>。</p>
+    <p>因此：[H+] × [OH-] = 10<sup>-14</sup></p>
+    <p>pH = -log[H+]</p>
   </div>
   
   <script>
@@ -244,28 +310,102 @@
     const redLitmus = document.getElementById('red-litmus');
     const resetBtn = document.getElementById('reset');
     const status = document.getElementById('status');
+    const phValue = document.getElementById('ph-value');
+    const phPointer = document.getElementById('ph-pointer');
+    const hConc = document.getElementById('h-conc');
+    const ohConc = document.getElementById('oh-conc');
     
-    let phLevel = 7; // 初始為中性
+    let phLevel = 7.0; // 初始為中性
+    let acidDrops = 0;
+    let baseDrops = 0;
+    const INITIAL_VOLUME = 200; // mL
+    const ACID_CONCENTRATION = 0.1; // mol/L
+    const BASE_CONCENTRATION = 0.1; // mol/L
+    const DROP_VOLUME = 1; // mL
+    
+    // 更新所有顯示
+    function updateAll() {
+      updateBeakerColor();
+      updatePhDisplay();
+      updateIonConcentrations();
+    }
     
     // 更新燒杯顏色
     function updateBeakerColor() {
       if (phLevel >= 8.2) {
         // 鹼性 - 粉紅色
-        beakerLiquid.style.backgroundColor = 'rgba(255, 100, 200, 0.7)';
+        beakerLiquid.style.backgroundColor = `rgba(255, ${Math.max(0, 200 - (phLevel - 8) * 20)}, ${Math.max(100, 200 - (phLevel - 8) * 20)}, 0.7)`;
       } else {
         // 酸性或中性 - 無色
         beakerLiquid.style.backgroundColor = 'rgba(240, 240, 240, 0.7)';
       }
     }
     
-    acid.addEventListener('click', function() {
-      phLevel = Math.max(3, phLevel - 2); // 降低pH值（更酸性）
-      updateBeakerColor();
+    // 更新pH值顯示
+    function updatePhDisplay() {
+      phValue.textContent = phLevel.toFixed(1);
+      // pH值從0到14，對應位置從0%到100%
+      const pointerPosition = (phLevel / 14) * 100;
+      phPointer.style.left = `${pointerPosition}%`;
+    }
+    
+    // 更新離子濃度顯示
+    function updateIonConcentrations() {
+      const hConcentration = Math.pow(10, -phLevel);
+      const ohConcentration = Math.pow(10, -14) / hConcentration;
       
-      if (phLevel < 8.2) {
-        status.textContent = '添加醋酸：溶液呈現無色（酸性或中性環境）';
+      // 格式化濃度顯示，使用科學計數法
+      hConc.innerHTML = formatConcentration(hConcentration);
+      ohConc.innerHTML = formatConcentration(ohConcentration);
+    }
+    
+    // 格式化濃度為科學計數法
+    function formatConcentration(concentration) {
+      if (concentration === 0) return "0 mol/L";
+      
+      const exponent = Math.floor(Math.log10(concentration));
+      const mantissa = concentration / Math.pow(10, exponent);
+      
+      return `${mantissa.toFixed(2)} × 10<sup>${exponent}</sup> mol/L`;
+    }
+    
+    // 計算加入酸或鹼後的pH值
+    function calculatePHAfterReaction() {
+      // 簡化計算，假設強酸和強鹼完全解離
+      const totalVolume = INITIAL_VOLUME + acidDrops * DROP_VOLUME + baseDrops * DROP_VOLUME;
+      const acidMoles = acidDrops * DROP_VOLUME * ACID_CONCENTRATION / 1000; // 轉換為mol
+      const baseMoles = baseDrops * DROP_VOLUME * BASE_CONCENTRATION / 1000; // 轉換為mol
+      
+      const netMoles = baseMoles - acidMoles;
+      
+      if (Math.abs(netMoles) < 1e-10) {
+        // 幾乎中性
+        return 7.0;
+      } else if (netMoles > 0) {
+        // 鹼性過量
+        const ohConcentration = netMoles / (totalVolume / 1000); // mol/L
+        const pOH = -Math.log10(ohConcentration);
+        return 14 - pOH;
       } else {
-        status.textContent = '添加醋酸：溶液仍呈現粉紅色（仍在鹼性環境）';
+        // 酸性過量
+        const hConcentration = Math.abs(netMoles) / (totalVolume / 1000); // mol/L
+        return -Math.log10(hConcentration);
+      }
+    }
+    
+    acid.addEventListener('click', function() {
+      acidDrops++;
+      phLevel = calculatePHAfterReaction();
+      phLevel = Math.max(0, Math.min(14, phLevel)); // 確保pH在0-14之間
+      
+      updateAll();
+      
+      if (phLevel < 7) {
+        status.textContent = `添加硫酸：溶液呈現酸性 (pH = ${phLevel.toFixed(1)})`;
+      } else if (phLevel === 7) {
+        status.textContent = `添加硫酸：溶液呈現中性 (pH = ${phLevel.toFixed(1)})`;
+      } else {
+        status.textContent = `添加硫酸：溶液仍呈現鹼性 (pH = ${phLevel.toFixed(1)})`;
       }
       
       // 傾斜動畫
@@ -276,13 +416,18 @@
     });
     
     base.addEventListener('click', function() {
-      phLevel = Math.min(14, phLevel + 2); // 增加pH值（更鹼性）
-      updateBeakerColor();
+      baseDrops++;
+      phLevel = calculatePHAfterReaction();
+      phLevel = Math.max(0, Math.min(14, phLevel)); // 確保pH在0-14之間
       
-      if (phLevel >= 8.2) {
-        status.textContent = '添加氫氧化鈉：溶液變為粉紅色（鹼性環境）';
+      updateAll();
+      
+      if (phLevel > 7) {
+        status.textContent = `添加氫氧化鈉：溶液呈現鹼性 (pH = ${phLevel.toFixed(1)})`;
+      } else if (phLevel === 7) {
+        status.textContent = `添加氫氧化鈉：溶液呈現中性 (pH = ${phLevel.toFixed(1)})`;
       } else {
-        status.textContent = '添加氫氧化鈉：溶液仍呈現無色（仍在酸性或中性環境）';
+        status.textContent = `添加氫氧化鈉：溶液仍呈現酸性 (pH = ${phLevel.toFixed(1)})`;
       }
       
       // 傾斜動畫
@@ -295,10 +440,10 @@
     blueLitmus.addEventListener('click', function() {
       if (phLevel < 7) {
         this.style.backgroundColor = '#FF6347'; // 變紅色
-        status.textContent = '藍色石蕊試紙變紅色 - 顯示溶液為酸性';
+        status.textContent = `藍色石蕊試紙變紅色 - 顯示溶液為酸性 (pH = ${phLevel.toFixed(1)})`;
       } else {
         this.style.backgroundColor = '#6495ED'; // 保持藍色
-        status.textContent = '藍色石蕊試紙保持藍色 - 顯示溶液為中性或鹼性';
+        status.textContent = `藍色石蕊試紙保持藍色 - 顯示溶液為中性或鹼性 (pH = ${phLevel.toFixed(1)})`;
       }
       
       // 重置石蕊試紙顏色（5秒後）
@@ -310,10 +455,10 @@
     redLitmus.addEventListener('click', function() {
       if (phLevel > 7) {
         this.style.backgroundColor = '#6495ED'; // 變藍色
-        status.textContent = '紅色石蕊試紙變藍色 - 顯示溶液為鹼性';
+        status.textContent = `紅色石蕊試紙變藍色 - 顯示溶液為鹼性 (pH = ${phLevel.toFixed(1)})`;
       } else {
         this.style.backgroundColor = '#FF6347'; // 保持紅色
-        status.textContent = '紅色石蕊試紙保持紅色 - 顯示溶液為中性或酸性';
+        status.textContent = `紅色石蕊試紙保持紅色 - 顯示溶液為中性或酸性 (pH = ${phLevel.toFixed(1)})`;
       }
       
       // 重置石蕊試紙顏色（5秒後）
@@ -323,15 +468,17 @@
     });
     
     resetBtn.addEventListener('click', function() {
-      phLevel = 7; // 重置為中性
-      updateBeakerColor();
+      phLevel = 7.0; // 重置為中性
+      acidDrops = 0;
+      baseDrops = 0;
+      updateAll();
       status.textContent = '實驗已重置：點擊試管將溶液加入燒杯中';
       blueLitmus.style.backgroundColor = '#6495ED'; // 重置為藍色
       redLitmus.style.backgroundColor = '#FF6347'; // 重置為紅色
     });
     
     // 初始化
-    updateBeakerColor();
+    updateAll();
   </script>
 </body>
 </html>
