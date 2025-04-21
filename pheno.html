@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>酚酞指示劑實驗</title>
+  <title>酚酞與石蕊試紙實驗</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -40,8 +40,7 @@
       justify-content: flex-end;
     }
     
-    .beaker::before {
-      content: "";
+    .liquid {
       position: absolute;
       left: 0;
       right: 0;
@@ -81,8 +80,7 @@
       transform: scale(1.05);
     }
     
-    .test-tube::before {
-      content: "";
+    .tube-liquid {
       position: absolute;
       left: 0;
       right: 0;
@@ -91,11 +89,11 @@
       transition: background-color 0.3s ease;
     }
     
-    .test-tube.acid::before {
+    .acid .tube-liquid {
       background-color: rgba(255, 255, 200, 0.8);
     }
     
-    .test-tube.base::before {
+    .base .tube-liquid {
       background-color: rgba(200, 255, 255, 0.8);
     }
     
@@ -106,6 +104,40 @@
       width: 100%;
       font-weight: bold;
       font-size: 0.9rem;
+    }
+    
+    .litmus-papers {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-left: 30px;
+    }
+    
+    .litmus-paper {
+      width: 80px;
+      height: 25px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: 1px solid #333;
+    }
+    
+    .litmus-paper:hover {
+      transform: scale(1.05);
+    }
+    
+    .blue-litmus {
+      background-color: #6495ED;
+    }
+    
+    .red-litmus {
+      background-color: #FF6347;
+    }
+    
+    .litmus-label {
+      font-size: 0.8rem;
+      text-align: center;
+      margin-top: 5px;
+      font-weight: bold;
     }
     
     .instructions {
@@ -150,43 +182,66 @@
   </style>
 </head>
 <body>
-  <h1>酚酞指示劑實驗</h1>
+  <h1>酚酞與石蕊試紙實驗</h1>
   
   <div class="container">
     <div class="test-tubes">
       <div class="test-tube acid" id="acid">
+        <div class="tube-liquid"></div>
         <div class="test-tube-label">醋酸<br>(酸性)</div>
       </div>
       <div class="test-tube base" id="base">
+        <div class="tube-liquid"></div>
         <div class="test-tube-label">氫氧化鈉<br>(鹼性)</div>
       </div>
     </div>
     
     <div class="beaker" id="beaker">
+      <div class="liquid" id="beaker-liquid"></div>
       <div class="beaker-label">燒杯中的酚酞溶液</div>
+    </div>
+    
+    <div class="litmus-papers">
+      <div>
+        <div class="litmus-paper blue-litmus" id="blue-litmus"></div>
+        <div class="litmus-label">藍色石蕊試紙</div>
+      </div>
+      <div>
+        <div class="litmus-paper red-litmus" id="red-litmus"></div>
+        <div class="litmus-label">紅色石蕊試紙</div>
+      </div>
     </div>
   </div>
   
-  <div class="status" id="status">點擊試管將溶液加入燒杯中</div>
+  <div class="status" id="status">點擊試管將溶液加入燒杯中，或者使用石蕊試紙測試溶液的酸鹼性</div>
   
   <button class="reset-btn" id="reset">重置實驗</button>
   
   <div class="instructions">
-    <h2>關於酚酞指示劑</h2>
-    <p>酚酞是一種酸鹼指示劑，在酸性和中性環境下呈現無色，而在鹼性環境下呈現粉紅色至紫紅色。</p>
+    <h2>關於酸鹼指示劑</h2>
+    <p><strong>酚酞指示劑：</strong>在酸性和中性環境下呈現無色，而在鹼性環境(pH > 8.2)下呈現粉紅色至紫紅色。</p>
+    <p><strong>石蕊試紙：</strong></p>
+    <ul>
+      <li><strong>藍色石蕊試紙：</strong>在酸性環境下變紅色，在鹼性和中性環境下保持藍色</li>
+      <li><strong>紅色石蕊試紙：</strong>在鹼性環境下變藍色，在酸性和中性環境下保持紅色</li>
+    </ul>
     <p>在本實驗中：</p>
     <ul>
       <li>最初的燒杯中含有無色的酚酞溶液（中性環境）</li>
       <li>點擊含有醋酸的試管，溶液會保持無色（酸性環境）</li>
       <li>點擊含有氫氧化鈉的試管，溶液會變為粉紅色（鹼性環境）</li>
       <li>如果溶液已經是粉紅色（鹼性），再加入醋酸會使其變回無色（中和反應）</li>
+      <li>點擊石蕊試紙可以測試燒杯中溶液的酸鹼性</li>
     </ul>
   </div>
   
   <script>
     const beaker = document.getElementById('beaker');
+    const beakerLiquid = document.getElementById('beaker-liquid');
     const acid = document.getElementById('acid');
     const base = document.getElementById('base');
+    const blueLitmus = document.getElementById('blue-litmus');
+    const redLitmus = document.getElementById('red-litmus');
     const resetBtn = document.getElementById('reset');
     const status = document.getElementById('status');
     
@@ -196,20 +251,18 @@
     function updateBeakerColor() {
       if (phLevel >= 8.2) {
         // 鹼性 - 粉紅色
-        beaker.style.setProperty('--beaker-color', 'rgba(255, 100, 200, 0.7)');
-        beaker.querySelector('::before').style.backgroundColor = 'rgba(255, 100, 200, 0.7)';
+        beakerLiquid.style.backgroundColor = 'rgba(255, 100, 200, 0.7)';
       } else {
         // 酸性或中性 - 無色
-        beaker.style.setProperty('--beaker-color', 'rgba(240, 240, 240, 0.7)');
-        beaker.querySelector('::before').style.backgroundColor = 'rgba(240, 240, 240, 0.7)';
+        beakerLiquid.style.backgroundColor = 'rgba(240, 240, 240, 0.7)';
       }
     }
     
     acid.addEventListener('click', function() {
       phLevel = Math.max(3, phLevel - 2); // 降低pH值（更酸性）
+      updateBeakerColor();
       
       if (phLevel < 8.2) {
-        beaker.querySelector(':before').style.backgroundColor = 'rgba(240, 240, 240, 0.7)';
         status.textContent = '添加醋酸：溶液呈現無色（酸性或中性環境）';
       } else {
         status.textContent = '添加醋酸：溶液仍呈現粉紅色（仍在鹼性環境）';
@@ -224,9 +277,9 @@
     
     base.addEventListener('click', function() {
       phLevel = Math.min(14, phLevel + 2); // 增加pH值（更鹼性）
+      updateBeakerColor();
       
       if (phLevel >= 8.2) {
-        beaker.querySelector(':before').style.backgroundColor = 'rgba(255, 100, 200, 0.7)';
         status.textContent = '添加氫氧化鈉：溶液變為粉紅色（鹼性環境）';
       } else {
         status.textContent = '添加氫氧化鈉：溶液仍呈現無色（仍在酸性或中性環境）';
@@ -239,11 +292,46 @@
       }, 500);
     });
     
+    blueLitmus.addEventListener('click', function() {
+      if (phLevel < 7) {
+        this.style.backgroundColor = '#FF6347'; // 變紅色
+        status.textContent = '藍色石蕊試紙變紅色 - 顯示溶液為酸性';
+      } else {
+        this.style.backgroundColor = '#6495ED'; // 保持藍色
+        status.textContent = '藍色石蕊試紙保持藍色 - 顯示溶液為中性或鹼性';
+      }
+      
+      // 重置石蕊試紙顏色（5秒後）
+      setTimeout(() => {
+        this.style.backgroundColor = '#6495ED';
+      }, 5000);
+    });
+    
+    redLitmus.addEventListener('click', function() {
+      if (phLevel > 7) {
+        this.style.backgroundColor = '#6495ED'; // 變藍色
+        status.textContent = '紅色石蕊試紙變藍色 - 顯示溶液為鹼性';
+      } else {
+        this.style.backgroundColor = '#FF6347'; // 保持紅色
+        status.textContent = '紅色石蕊試紙保持紅色 - 顯示溶液為中性或酸性';
+      }
+      
+      // 重置石蕊試紙顏色（5秒後）
+      setTimeout(() => {
+        this.style.backgroundColor = '#FF6347';
+      }, 5000);
+    });
+    
     resetBtn.addEventListener('click', function() {
       phLevel = 7; // 重置為中性
-      beaker.querySelector(':before').style.backgroundColor = 'rgba(240, 240, 240, 0.7)';
+      updateBeakerColor();
       status.textContent = '實驗已重置：點擊試管將溶液加入燒杯中';
+      blueLitmus.style.backgroundColor = '#6495ED'; // 重置為藍色
+      redLitmus.style.backgroundColor = '#FF6347'; // 重置為紅色
     });
+    
+    // 初始化
+    updateBeakerColor();
   </script>
 </body>
 </html>
