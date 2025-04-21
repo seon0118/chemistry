@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>酚酞指示劑實驗</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+    
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+    
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      margin-bottom: 30px;
+    }
+    
+    .beaker {
+      position: relative;
+      width: 200px;
+      height: 250px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border: 2px solid #333;
+      border-radius: 0 0 20px 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    
+    .beaker::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 200px;
+      background-color: rgba(240, 240, 240, 0.7);
+      transition: background-color 0.8s ease;
+    }
+    
+    .beaker-label {
+      position: absolute;
+      bottom: -30px;
+      text-align: center;
+      width: 100%;
+      font-weight: bold;
+    }
+    
+    .test-tubes {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    
+    .test-tube {
+      position: relative;
+      width: 40px;
+      height: 150px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border: 2px solid #333;
+      border-radius: 0 0 20px 20px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    .test-tube:hover {
+      transform: scale(1.05);
+    }
+    
+    .test-tube::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 100px;
+      transition: background-color 0.3s ease;
+    }
+    
+    .test-tube.acid::before {
+      background-color: rgba(255, 255, 200, 0.8);
+    }
+    
+    .test-tube.base::before {
+      background-color: rgba(200, 255, 255, 0.8);
+    }
+    
+    .test-tube-label {
+      position: absolute;
+      bottom: -30px;
+      text-align: center;
+      width: 100%;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    
+    .instructions {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .instructions h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    
+    .instructions p {
+      line-height: 1.6;
+    }
+    
+    .reset-btn {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+    }
+    
+    .reset-btn:hover {
+      background-color: #45a049;
+    }
+    
+    .status {
+      margin-top: 20px;
+      font-weight: bold;
+      height: 24px;
+    }
+  </style>
+</head>
+<body>
+  <h1>酚酞指示劑實驗</h1>
+  
+  <div class="container">
+    <div class="test-tubes">
+      <div class="test-tube acid" id="acid">
+        <div class="test-tube-label">醋酸<br>(酸性)</div>
+      </div>
+      <div class="test-tube base" id="base">
+        <div class="test-tube-label">氫氧化鈉<br>(鹼性)</div>
+      </div>
+    </div>
+    
+    <div class="beaker" id="beaker">
+      <div class="beaker-label">燒杯中的酚酞溶液</div>
+    </div>
+  </div>
+  
+  <div class="status" id="status">點擊試管將溶液加入燒杯中</div>
+  
+  <button class="reset-btn" id="reset">重置實驗</button>
+  
+  <div class="instructions">
+    <h2>關於酚酞指示劑</h2>
+    <p>酚酞是一種酸鹼指示劑，在酸性和中性環境下呈現無色，而在鹼性環境下呈現粉紅色至紫紅色。</p>
+    <p>在本實驗中：</p>
+    <ul>
+      <li>最初的燒杯中含有無色的酚酞溶液（中性環境）</li>
+      <li>點擊含有醋酸的試管，溶液會保持無色（酸性環境）</li>
+      <li>點擊含有氫氧化鈉的試管，溶液會變為粉紅色（鹼性環境）</li>
+      <li>如果溶液已經是粉紅色（鹼性），再加入醋酸會使其變回無色（中和反應）</li>
+    </ul>
+  </div>
+  
+  <script>
+    const beaker = document.getElementById('beaker');
+    const acid = document.getElementById('acid');
+    const base = document.getElementById('base');
+    const resetBtn = document.getElementById('reset');
+    const status = document.getElementById('status');
+    
+    let phLevel = 7; // 初始為中性
+    
+    // 更新燒杯顏色
+    function updateBeakerColor() {
+      if (phLevel >= 8.2) {
+        // 鹼性 - 粉紅色
+        beaker.style.setProperty('--beaker-color', 'rgba(255, 100, 200, 0.7)');
+        beaker.querySelector('::before').style.backgroundColor = 'rgba(255, 100, 200, 0.7)';
+      } else {
+        // 酸性或中性 - 無色
+        beaker.style.setProperty('--beaker-color', 'rgba(240, 240, 240, 0.7)');
+        beaker.querySelector('::before').style.backgroundColor = 'rgba(240, 240, 240, 0.7)';
+      }
+    }
+    
+    acid.addEventListener('click', function() {
+      phLevel = Math.max(3, phLevel - 2); // 降低pH值（更酸性）
+      
+      if (phLevel < 8.2) {
+        beaker.querySelector(':before').style.backgroundColor = 'rgba(240, 240, 240, 0.7)';
+        status.textContent = '添加醋酸：溶液呈現無色（酸性或中性環境）';
+      } else {
+        status.textContent = '添加醋酸：溶液仍呈現粉紅色（仍在鹼性環境）';
+      }
+      
+      // 傾斜動畫
+      this.style.transform = 'rotate(45deg) translateY(-20px)';
+      setTimeout(() => {
+        this.style.transform = '';
+      }, 500);
+    });
+    
+    base.addEventListener('click', function() {
+      phLevel = Math.min(14, phLevel + 2); // 增加pH值（更鹼性）
+      
+      if (phLevel >= 8.2) {
+        beaker.querySelector(':before').style.backgroundColor = 'rgba(255, 100, 200, 0.7)';
+        status.textContent = '添加氫氧化鈉：溶液變為粉紅色（鹼性環境）';
+      } else {
+        status.textContent = '添加氫氧化鈉：溶液仍呈現無色（仍在酸性或中性環境）';
+      }
+      
+      // 傾斜動畫
+      this.style.transform = 'rotate(45deg) translateY(-20px)';
+      setTimeout(() => {
+        this.style.transform = '';
+      }, 500);
+    });
+    
+    resetBtn.addEventListener('click', function() {
+      phLevel = 7; // 重置為中性
+      beaker.querySelector(':before').style.backgroundColor = 'rgba(240, 240, 240, 0.7)';
+      status.textContent = '實驗已重置：點擊試管將溶液加入燒杯中';
+    });
+  </script>
+</body>
+</html>
